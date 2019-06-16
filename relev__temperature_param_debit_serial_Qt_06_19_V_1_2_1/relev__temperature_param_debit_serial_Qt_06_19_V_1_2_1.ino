@@ -16,7 +16,7 @@
 //-----------------------------------------------------------------------------------------------------------------------------------------
 // DEFINES
 //-----------------------------------------------------------------------------------------------------------------------------------------
-#define COMMENT               // On/Off commentaire sur moniteur serie
+//#define COMMENT               // On/Off commentaire sur moniteur serie /!\ conflit dans la communication serie quand on ouvre l'appli Qt !!!
 #define spd 90                  // vitesse moteur
 #define prescaler 100           // in fine, defini la resolution du chrono (p/r a sa maj)
 
@@ -34,10 +34,10 @@ volatile boolean majChrono = false;
 volatile boolean irState = false;
 int compteBoucle = 0;
 int dataReceived[8] = {0};
-int timeOpenMs = 3000;
-int timeOpen = 3;
-int timeCloseMs = 5000;
-int timeClose = 5;
+int timeOpenMs = 0;
+int timeOpen = 0;
+int timeCloseMs = 0;
+int timeClose = 0;
 char timeOpenChar[4] = {0, 0, 0, '\0'};
 char timeCloseChar[4] = {0, 0, 0, '\0'};
 unsigned long previewsTime = 0;
@@ -166,6 +166,7 @@ void convertDataReceived() {
       // on converti un tableau de char[] en un "int".
       // /!\ prevoir un caractere de stop dans la tab char[] pour la converssion (\0) <=> timeOpenChar[4] = {0, 0, 0, '\0'}
       sscanf(timeOpenChar, "%d", &timeOpen);
+      timeOpenMs = (timeOpen * 1000);
 #ifdef COMMENT
       Serial << " time OPEN = " << timeOpen << endl;
 #endif
@@ -188,6 +189,7 @@ void convertDataReceived() {
       // on converti un tableau de char[] en un "int".
       // /!\ prevoir un caractere de stop dans la tab char[] pour la converssion (\0). <=> timeCloseChar[4] = {0, 0, 0, '\0'}
       sscanf(timeCloseChar, "%d", &timeClose);
+      timeCloseMs = (timeClose * 1000);
 #ifdef COMMENT
       delay(100);
       Serial << " time CLOSE = " << timeClose << endl;
